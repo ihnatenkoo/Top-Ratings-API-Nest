@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { getMongoConfig } from './configs/getMongoConfig';
 
 import { AuthModule } from './auth/auth.module';
 import { TopPageModule } from './top-page/top-page.module';
@@ -11,6 +13,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_URL, getMongoConfig()),
     AuthModule,
     TopPageModule,
     ProductModule,
