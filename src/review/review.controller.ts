@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CreateReviewDto } from './dto/createReviewDto';
 import { ReviewService } from './review.service';
 import { ReviewModel } from './review.model';
@@ -7,9 +16,10 @@ import { ReviewModel } from './review.model';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @UsePipes(new ValidationPipe())
   @Post('create')
   async create(@Body() createReviewDto: CreateReviewDto): Promise<ReviewModel> {
-    return await this.reviewService.create(createReviewDto);
+    return this.reviewService.create(createReviewDto);
   }
 
   @Delete(':id')
