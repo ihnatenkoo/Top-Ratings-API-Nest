@@ -14,4 +14,8 @@ export class ReviewService {
   async create(createReviewDto: CreateReviewDto): Promise<ReviewModel> {
     return this.reviewModel.create(createReviewDto);
   }
+
+  async delete(reviewId: string) {
+    return this.reviewModel.findByIdAndDelete(reviewId);
+  }
 }
