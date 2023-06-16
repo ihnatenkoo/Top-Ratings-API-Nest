@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModel } from './auth.model';
 import { Model } from 'mongoose';
+import { hash } from 'bcryptjs';
+import { UserModel } from './auth.model';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,16 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    return this.userModel.create(registerDto);
+    const passwordHash = await hash(registerDto.password, 10);
+
+    return this.userModel.create({ ...registerDto, passwordHash });
+  }
+
+  async login(loginDto: LoginDto) {
+    return;
+  }
+
+  async findUser(email: string) {
+    return this.userModel.findOne({ email });
   }
 }
