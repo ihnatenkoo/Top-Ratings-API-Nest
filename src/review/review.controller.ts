@@ -35,8 +35,15 @@ export class ReviewController {
     }
   }
 
+  //TODO: get all reviews by productId
   @Get('byProduct/:productId')
   async getByProduct(@Param('productId') productId: string) {
+    return;
+  }
+
+  //TODO: delete all reviews by productId
+  @Delete('byProduct/:productId')
+  async deleteByProduct(@Param('productId') productId: string) {
     return;
   }
 }
