@@ -16,6 +16,7 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
+import { AuthReturnType } from './types/authReturnType';
 
 @Controller('auth')
 export class AuthController {
@@ -23,34 +24,40 @@ export class AuthController {
 
   @Post('register')
   @UsePipes(new ValidationPipe())
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto): Promise<AuthReturnType> {
     const user = await this.authService.findUser(registerDto.email);
 
     if (user) {
       throw new HttpException(USER_ALREADY_REGISTERED, HttpStatus.BAD_REQUEST);
     }
 
-    return this.authService.register(registerDto);
+    const newUser = await this.authService.register(registerDto);
+
+    newUser.passwordHash = undefined;
+
+    return newUser;
   }
 
   @Post('login')
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<AuthReturnType> {
     const user = await this.authService.findUser(loginDto.email);
 
     if (!user) {
       throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
-    const passwordValid = await this.authService.login(
+    const isPasswordCorrect = await this.authService.validateUser(
       loginDto.password,
       user.passwordHash,
     );
 
-    if (!passwordValid) {
+    if (!isPasswordCorrect) {
       throw new HttpException(WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);
     }
+
+    user.passwordHash = undefined;
 
     return user;
   }

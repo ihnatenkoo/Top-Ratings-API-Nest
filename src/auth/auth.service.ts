@@ -11,17 +11,17 @@ export class AuthService {
     @InjectModel(UserModel.name) private readonly userModel: Model<UserModel>,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<UserModel> {
     const passwordHash = await hash(registerDto.password, 10);
 
     return this.userModel.create({ ...registerDto, passwordHash });
   }
 
-  async login(password: string, passwordHash: string): Promise<boolean> {
-    return await compare(password, passwordHash);
+  async validateUser(password: string, passwordHash: string): Promise<boolean> {
+    return compare(password, passwordHash);
   }
 
-  async findUser(email: string) {
+  async findUser(email: string): Promise<UserModel> {
     return this.userModel.findOne({ email });
   }
 }
