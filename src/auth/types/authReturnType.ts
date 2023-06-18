@@ -1,3 +1,7 @@
 import { UserModel } from '../auth.model';
 
-export type AuthReturnType = Omit<UserModel, 'passwordHash'>;
+interface IAccessToken {
+  access_token: string;
+}
+
+export type AuthReturnType = Omit<UserModel, 'passwordHash'> & IAccessToken;
