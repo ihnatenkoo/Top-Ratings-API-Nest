@@ -14,4 +14,8 @@ export class ProductService {
   async create(createProductDto: CreateProductDto): Promise<ProductModel> {
     return this.productModel.create(createProductDto);
   }
+
+  async findById(id: string): Promise<ProductModel> {
+    return this.productModel.findById(id);
+  }
 }
