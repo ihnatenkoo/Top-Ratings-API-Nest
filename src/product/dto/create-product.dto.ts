@@ -51,7 +51,10 @@ export class CreateProductDto {
   tags: string[];
 
   @IsArray()
-  @ValidateNested()
+  @ValidateNested({
+    message:
+      'Each characteristic object in array must contain name and value fields',
+  })
   @Type(() => ProductCharacteristicDto)
   characteristics: ProductCharacteristicDto[];
 }
