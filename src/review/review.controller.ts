@@ -42,10 +42,11 @@ export class ReviewController {
     await this.reviewService.delete(userId, productId, reviewId);
   }
 
-  //TODO: get all reviews by productId
   @Get('byProduct/:productId')
-  async getByProduct(@Param('productId') productId: string) {
-    return;
+  async getByProduct(
+    @Param('productId') productId: string,
+  ): Promise<ReviewModel[]> {
+    return await this.reviewService.getByProduct(productId);
   }
 
   //TODO: delete all reviews by productId

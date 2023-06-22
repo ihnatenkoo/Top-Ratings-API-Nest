@@ -62,4 +62,10 @@ export class ReviewService {
 
     await this.reviewModel.findByIdAndDelete(reviewId);
   }
+
+  async getByProduct(productId: string): Promise<ReviewModel[]> {
+    return this.reviewModel.find({
+      productId: new mongoose.Types.ObjectId(productId),
+    });
+  }
 }
