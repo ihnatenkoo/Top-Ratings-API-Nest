@@ -12,6 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { User } from 'src/decorators/user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { NOT_FOUND } from '../constants';
 import { CreateReviewDto } from './dto/createReviewDto';
@@ -22,13 +23,15 @@ import { ReviewModel } from './review.model';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @UsePipes(new ValidationPipe())
   @Post(':productId/create')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
   async create(
+    @User('_id') userId: string,
     @Param('productId') productId: string,
     @Body() createReviewDto: CreateReviewDto,
   ): Promise<ReviewModel> {
-    return this.reviewService.create(productId, createReviewDto);
+    return await this.reviewService.create(userId, productId, createReviewDto);
   }
 
   @UseGuards(JwtAuthGuard)

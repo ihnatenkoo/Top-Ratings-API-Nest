@@ -15,6 +15,7 @@ export class ReviewService {
   ) {}
 
   async create(
+    userId: string,
     productId: string,
     createReviewDto: CreateReviewDto,
   ): Promise<ReviewModel> {
@@ -25,8 +26,9 @@ export class ReviewService {
     }
 
     return this.reviewModel.create({
-      ...createReviewDto,
+      author: new mongoose.Types.ObjectId(userId),
       productId: new mongoose.Types.ObjectId(productId),
+      ...createReviewDto,
     });
   }
 

@@ -7,7 +7,7 @@ export type ReviewDocument = HydratedDocument<ReviewModel>;
 @Schema({ timestamps: true, versionKey: false, collection: 'reviews' })
 export class ReviewModel {
   @Prop()
-  author: string;
+  author: Types.ObjectId;
 
   @Prop()
   title: string;

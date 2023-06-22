@@ -2,9 +2,6 @@ import { IsString, IsNumber, Min, Max } from 'class-validator';
 
 export class CreateReviewDto {
   @IsString()
-  author: string;
-
-  @IsString()
   title: string;
 
   @IsString()
