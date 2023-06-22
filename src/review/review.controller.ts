@@ -23,9 +23,12 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @UsePipes(new ValidationPipe())
-  @Post('create')
-  async create(@Body() createReviewDto: CreateReviewDto): Promise<ReviewModel> {
-    return this.reviewService.create(createReviewDto);
+  @Post(':productId/create')
+  async create(
+    @Param('productId') productId: string,
+    @Body() createReviewDto: CreateReviewDto,
+  ): Promise<ReviewModel> {
+    return this.reviewService.create(productId, createReviewDto);
   }
 
   @UseGuards(JwtAuthGuard)
