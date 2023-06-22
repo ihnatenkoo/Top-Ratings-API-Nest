@@ -21,12 +21,12 @@ import { ReviewModel } from './review.model';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post(':productId/create')
+  @Post('create')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async create(
     @User('id') userId: string,
-    @Param('productId') productId: string,
+    @Query('product') productId: string,
     @Body() createReviewDto: CreateReviewDto,
   ): Promise<ReviewModel> {
     return await this.reviewService.create(userId, productId, createReviewDto);
