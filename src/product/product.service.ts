@@ -15,7 +15,22 @@ export class ProductService {
     return this.productModel.create(createProductDto);
   }
 
-  async findById(id: string): Promise<ProductModel> {
+  async findById(id: string): Promise<ProductModel | null> {
     return this.productModel.findById(id);
+  }
+
+  async deleteById(id: string): Promise<number> {
+    const { deletedCount } = await this.productModel.deleteOne({ _id: id });
+
+    return deletedCount;
+  }
+
+  async updateById(
+    id: string,
+    updateProductDto: CreateProductDto,
+  ): Promise<ProductModel | null> {
+    return this.productModel.findByIdAndUpdate(id, updateProductDto, {
+      new: true,
+    });
   }
 }

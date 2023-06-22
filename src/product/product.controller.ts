@@ -46,14 +46,30 @@ export class ProductController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async delete(@Param('id') id: string) {
-    return;
+  async deleteById(@Param('id') id: string): Promise<void> {
+    const deletedCount = await this.productService.deleteById(id);
+
+    if (!deletedCount) {
+      throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id') id: string, @Body() dto: ProductModel) {
-    return;
+  async updateById(
+    @Param('id') id: string,
+    @Body() updateProductDto: CreateProductDto,
+  ): Promise<ProductModel> {
+    const updatedProduct = await this.productService.updateById(
+      id,
+      updateProductDto,
+    );
+
+    if (!updatedProduct) {
+      throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    return updatedProduct;
   }
 
   @Post()
