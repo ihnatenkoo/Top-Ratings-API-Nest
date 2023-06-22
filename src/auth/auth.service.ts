@@ -59,7 +59,8 @@ export class AuthService {
     }
 
     const access_token = await this.generateAccessToken({
-      email: loginDto.email,
+      email: user.email,
+      _id: user._id,
     });
 
     user.passwordHash = undefined;
