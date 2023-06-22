@@ -19,6 +19,7 @@ import { ProductModel } from './product.model';
 import { FindProductDto } from './dto/find-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
+import { IFindProductsWithReviews } from './types/IFindProductsWithReviews.interface';
 
 @Controller('product')
 export class ProductController {
@@ -72,9 +73,12 @@ export class ProductController {
     return updatedProduct;
   }
 
-  @Post()
+  @Post('find')
+  @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  async find(@Body() findProductDto: FindProductDto) {
-    return;
+  async findWithReviews(
+    @Body() findProductDto: FindProductDto,
+  ): Promise<IFindProductsWithReviews[]> {
+    return await this.productService.findWithReviews(findProductDto);
   }
 }
