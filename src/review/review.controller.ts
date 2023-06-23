@@ -49,9 +49,11 @@ export class ReviewController {
     return await this.reviewService.getByProduct(productId);
   }
 
-  //TODO: delete all reviews by productId
   @Delete('byProduct/:productId')
-  async deleteByProduct(@Param('productId') productId: string) {
-    return;
+  @UseGuards(JwtAuthGuard)
+  async deleteAllByProduct(
+    @Param('productId') productId: string,
+  ): Promise<{ deletedCount: number }> {
+    return await this.reviewService.deleteAllByProduct(productId);
   }
 }

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import {
   ACCESS_DENIED,
   BAD_DELETE_REVIEW_REQUEST,
@@ -30,8 +30,8 @@ export class ReviewService {
     }
 
     return this.reviewModel.create({
-      author: new mongoose.Types.ObjectId(userId),
-      productId: new mongoose.Types.ObjectId(productId),
+      author: new Types.ObjectId(userId),
+      productId: new Types.ObjectId(productId),
       ...createReviewDto,
     });
   }
@@ -65,7 +65,17 @@ export class ReviewService {
 
   async getByProduct(productId: string): Promise<ReviewModel[]> {
     return this.reviewModel.find({
-      productId: new mongoose.Types.ObjectId(productId),
+      productId: new Types.ObjectId(productId),
     });
+  }
+
+  async deleteAllByProduct(
+    productId: string,
+  ): Promise<{ deletedCount: number }> {
+    const { deletedCount } = await this.reviewModel.deleteMany({
+      productId: new Types.ObjectId(productId),
+    });
+
+    return { deletedCount };
   }
 }
