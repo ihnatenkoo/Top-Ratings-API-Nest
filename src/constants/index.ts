@@ -5,3 +5,4 @@ export const USER_ALREADY_REGISTERED = 'User is already registered';
 export const WRONG_CREDENTIALS = 'Wrong credentials';
 export const ACCESS_DENIED = 'Access denied';
 export const BAD_DELETE_REVIEW_REQUEST = 'Product does not contain this review';
+export const ID_IS_INVALID = 'ID is invalid';
