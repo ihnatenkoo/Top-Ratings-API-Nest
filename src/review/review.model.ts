@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 export type RatingType = 1 | 2 | 3 | 4 | 5;
-export type ReviewDocument = HydratedDocument<ReviewModel>;
 
 @Schema({ timestamps: true, versionKey: false, collection: 'reviews' })
 export class ReviewModel {

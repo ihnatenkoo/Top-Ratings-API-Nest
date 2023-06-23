@@ -36,7 +36,11 @@ export class ReviewService {
     });
   }
 
-  async delete(userId: string, productId: string, reviewId: string) {
+  async delete(
+    userId: string,
+    productId: string,
+    reviewId: string,
+  ): Promise<void> {
     const review = await this.reviewModel.findById(reviewId);
 
     if (!review) {
