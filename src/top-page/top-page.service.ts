@@ -33,4 +33,23 @@ export class TopPageService {
       throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
     }
   }
+
+  async update(
+    pageId: string,
+    updatePageDto: CreatePageDto,
+  ): Promise<TopPageModel> {
+    const updatedPage = await this.topPageModel.findByIdAndUpdate(
+      pageId,
+      updatePageDto,
+      {
+        new: true,
+      },
+    );
+
+    if (!updatedPage) {
+      throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    return updatedPage;
+  }
 }

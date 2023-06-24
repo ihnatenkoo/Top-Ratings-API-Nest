@@ -43,11 +43,13 @@ export class TopPageController {
   }
 
   @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', IdValidationPipe) pageId: string,
-    @Body() dto: TopPageModel,
+    @Body() updatePageDto: CreatePageDto,
   ) {
-    return;
+    return await this.topPageService.update(pageId, updatePageDto);
   }
 
   @Post()
