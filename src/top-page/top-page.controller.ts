@@ -37,12 +37,16 @@ export class TopPageController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return;
+  @UseGuards(JwtAuthGuard)
+  async delete(@Param('id', IdValidationPipe) pageId: string) {
+    return await this.topPageService.delete(pageId);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: TopPageModel) {
+  async update(
+    @Param('id', IdValidationPipe) pageId: string,
+    @Body() dto: TopPageModel,
+  ) {
     return;
   }
 

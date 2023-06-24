@@ -25,4 +25,12 @@ export class TopPageService {
 
     return page;
   }
+
+  async delete(pageId: string) {
+    const deletedPage = await this.topPageModel.findByIdAndDelete(pageId);
+
+    if (!deletedPage) {
+      throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+  }
 }
