@@ -59,4 +59,10 @@ export class TopPageService {
   }: FindTopPageDto): Promise<TopPageModel[]> {
     return this.topPageModel.find({ firstCategory });
   }
+
+  async textSearch(text: string): Promise<TopPageModel[]> {
+    return this.topPageModel.find({
+      $text: { $search: text, $caseSensitive: false },
+    });
+  }
 }

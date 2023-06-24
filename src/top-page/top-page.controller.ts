@@ -60,4 +60,9 @@ export class TopPageController {
   ): Promise<TopPageModel[]> {
     return await this.topPageService.findByCategory(findTopPageDto);
   }
+
+  @Get('text-search/:text')
+  async textSearch(@Param('text') text: string): Promise<TopPageModel[]> {
+    return await this.topPageService.textSearch(text);
+  }
 }
