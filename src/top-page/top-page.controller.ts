@@ -38,7 +38,7 @@ export class TopPageController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async delete(@Param('id', IdValidationPipe) pageId: string) {
+  async delete(@Param('id', IdValidationPipe) pageId: string): Promise<void> {
     return await this.topPageService.delete(pageId);
   }
 
@@ -48,13 +48,16 @@ export class TopPageController {
   async update(
     @Param('id', IdValidationPipe) pageId: string,
     @Body() updatePageDto: CreatePageDto,
-  ) {
+  ): Promise<TopPageModel> {
     return await this.topPageService.update(pageId, updatePageDto);
   }
 
   @Post()
+  @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  async find(@Body() dto: FindTopPageDto) {
-    return;
+  async findByCategory(
+    @Body() findTopPageDto: FindTopPageDto,
+  ): Promise<TopPageModel[]> {
+    return await this.topPageService.findByCategory(findTopPageDto);
   }
 }

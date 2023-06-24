@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreatePageDto } from './dto/create-page.dto';
 import { TopPageModel } from './top-page.model';
 import { NOT_FOUND } from 'src/constants';
+import { FindTopPageDto } from './dto/find-top-page.dto';
 
 @Injectable()
 export class TopPageService {
@@ -26,7 +27,7 @@ export class TopPageService {
     return page;
   }
 
-  async delete(pageId: string) {
+  async delete(pageId: string): Promise<void> {
     const deletedPage = await this.topPageModel.findByIdAndDelete(pageId);
 
     if (!deletedPage) {
@@ -51,5 +52,11 @@ export class TopPageService {
     }
 
     return updatedPage;
+  }
+
+  async findByCategory({
+    firstCategory,
+  }: FindTopPageDto): Promise<TopPageModel[]> {
+    return this.topPageModel.find({ firstCategory });
   }
 }
