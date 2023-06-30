@@ -11,16 +11,30 @@ export class RolesService {
   ) {}
 
   async create(dto: CreateRoleDto): Promise<RoleModel> {
-    const roles = await this.getRoles();
+    const role = await this.findRole(dto.role);
 
-    if (roles.some((item) => item.role === dto.role)) {
+    if (role) {
       throw new HttpException('Role already exists', HttpStatus.BAD_REQUEST);
     }
 
     return this.roleModel.create(dto);
   }
 
-  async getRoles(): Promise<RoleModel[]> {
+  async delete(role: string): Promise<void> {
+    const roleForDelete = await this.findRole(role);
+
+    if (!roleForDelete) {
+      throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.roleModel.deleteOne({ role });
+  }
+
+  async getAllRoles(): Promise<RoleModel[]> {
     return await this.roleModel.find();
+  }
+
+  async findRole(role: string): Promise<RoleModel> {
+    return await this.roleModel.findOne({ role });
   }
 }

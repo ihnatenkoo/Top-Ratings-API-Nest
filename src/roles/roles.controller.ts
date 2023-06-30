@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
@@ -20,8 +22,13 @@ export class RolesController {
     return await this.rolesService.create(dto);
   }
 
-  @Get()
-  async getRoles(): Promise<RoleModel[]> {
-    return await this.rolesService.getRoles();
+  @Delete('/:role')
+  async delete(@Param('role') role: string): Promise<void> {
+    return await this.rolesService.delete(role);
+  }
+
+  @Get('/all')
+  async getAllRoles(): Promise<RoleModel[]> {
+    return await this.rolesService.getAllRoles();
   }
 }
