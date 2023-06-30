@@ -10,6 +10,7 @@ import { ReviewModule } from './review/review.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FilesModule } from './files/files.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FilesModule } from './files/files.module';
     ProductModule,
     ReviewModule,
     FilesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
