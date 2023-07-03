@@ -1,10 +1,9 @@
 import { IsEnum, IsString } from 'class-validator';
 
-enum Roles {
+export enum Roles {
   ADMIN = 'admin',
   USER = 'user',
 }
-
 export class CreateRoleDto {
   @IsEnum(Roles)
   role: Roles;

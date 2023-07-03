@@ -12,16 +12,23 @@ import {
   USER_ALREADY_REGISTERED,
   WRONG_CREDENTIALS,
 } from 'src/constants';
+import { RolesService } from 'src/roles/roles.service';
+import { Roles } from 'src/roles/dto/create-role.dto';
+import { RoleModel } from 'src/roles/role.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(UserModel.name) private readonly userModel: Model<UserModel>,
+    @InjectModel(RoleModel.name) private readonly roleModel: Model<RoleModel>,
     private readonly jwtService: JwtService,
+    private readonly rolesService: RolesService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthReturnType> {
     const user = await this.findUser(registerDto.email);
+
+    const role = await this.rolesService.findRole(Roles.USER);
 
     if (user) {
       throw new HttpException(USER_ALREADY_REGISTERED, HttpStatus.BAD_REQUEST);
@@ -35,9 +42,11 @@ export class AuthService {
     const newUser = await this.userModel.create({
       ...registerDto,
       passwordHash,
+      roles: [role._id],
     });
 
     newUser.passwordHash = undefined;
+    newUser.roles = undefined;
 
     return { ...newUser.toObject(), access_token };
   }
@@ -64,12 +73,16 @@ export class AuthService {
     });
 
     user.passwordHash = undefined;
+    user.roles = undefined;
 
     return { ...user, access_token };
   }
 
   async findUser(email: string): Promise<UserModel> {
-    return this.userModel.findOne({ email }).lean();
+    return this.userModel
+      .findOne({ email })
+      .populate('roles', '', this.roleModel)
+      .lean();
   }
 
   async validateUser(password: string, passwordHash: string): Promise<boolean> {
