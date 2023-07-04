@@ -1,4 +1,5 @@
 export const NOT_FOUND = 'Not found';
+export const UNAUTHORIZED = 'Unauthorized';
 export const PRODUCT_NOT_FOUND = 'Product not found';
 export const REVIEW_NOT_FOUND = 'Review not found';
 export const USER_ALREADY_REGISTERED = 'User is already registered';
