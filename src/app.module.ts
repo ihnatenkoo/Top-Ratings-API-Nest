@@ -11,11 +11,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FilesModule } from './files/files.module';
 import { RolesModule } from './roles/roles.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL, getMongoConfig()),
+    JwtModule.register({}),
     AuthModule,
     TopPageModule,
     ProductModule,
