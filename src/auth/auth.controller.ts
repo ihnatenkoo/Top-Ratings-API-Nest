@@ -6,7 +6,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthReturnType } from './types/authReturnType';
+import { IAccessToken } from './types';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
@@ -17,14 +17,14 @@ export class AuthController {
 
   @Post('register')
   @UsePipes(new ValidationPipe())
-  async register(@Body() registerDto: RegisterDto): Promise<AuthReturnType> {
+  async register(@Body() registerDto: RegisterDto): Promise<IAccessToken> {
     return await this.authService.register(registerDto);
   }
 
   @Post('login')
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  async login(@Body() loginDto: LoginDto): Promise<AuthReturnType> {
+  async login(@Body() loginDto: LoginDto): Promise<IAccessToken> {
     return await this.authService.login(loginDto);
   }
 }

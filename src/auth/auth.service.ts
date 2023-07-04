@@ -3,18 +3,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { hash, compare } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { AuthReturnType } from './types/authReturnType';
+import { IAccessToken } from './types';
 import { UserModel } from './auth.model';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RolesService } from 'src/roles/roles.service';
+import { RoleModel } from 'src/roles/role.model';
+import { Roles } from 'src/constants/roles';
 import {
   NOT_FOUND,
   USER_ALREADY_REGISTERED,
   WRONG_CREDENTIALS,
 } from 'src/constants';
-import { RolesService } from 'src/roles/roles.service';
-import { Roles } from 'src/roles/dto/create-role.dto';
-import { RoleModel } from 'src/roles/role.model';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
     private readonly rolesService: RolesService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<AuthReturnType> {
+  async register(registerDto: RegisterDto): Promise<IAccessToken> {
     const user = await this.findUser(registerDto.email);
 
     const role = await this.rolesService.findRole(Roles.USER);
@@ -35,23 +35,25 @@ export class AuthService {
     }
 
     const passwordHash = await hash(registerDto.password, 10);
-    const access_token = await this.generateAccessToken({
-      email: registerDto.email,
-    });
 
     const newUser = await this.userModel.create({
       ...registerDto,
       passwordHash,
-      roles: [role._id],
+      roles: [role?._id],
     });
 
-    newUser.passwordHash = undefined;
-    newUser.roles = undefined;
+    const createdUser = await this.findUser(newUser.email);
 
-    return { ...newUser.toObject(), access_token };
+    const access_token = await this.generateAccessToken({
+      _id: createdUser._id,
+      email: createdUser.email,
+      roles: createdUser.roles,
+    });
+
+    return { access_token };
   }
 
-  async login(loginDto: LoginDto): Promise<AuthReturnType> {
+  async login(loginDto: LoginDto): Promise<IAccessToken> {
     const user = await this.findUser(loginDto.email);
 
     if (!user) {
@@ -68,14 +70,12 @@ export class AuthService {
     }
 
     const access_token = await this.generateAccessToken({
-      email: user.email,
       _id: user._id,
+      email: user.email,
+      roles: user.roles,
     });
 
-    user.passwordHash = undefined;
-    user.roles = undefined;
-
-    return { ...user, access_token };
+    return { access_token };
   }
 
   async findUser(email: string): Promise<UserModel> {
@@ -92,7 +92,7 @@ export class AuthService {
   async generateAccessToken(payload: Record<string, any>): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: process.env.JWT_SECRET_KEY,
-      expiresIn: '30m',
+      expiresIn: '24h',
     });
   }
 }
