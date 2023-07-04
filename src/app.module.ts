@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { FilesModule } from './files/files.module';
 import { RolesModule } from './roles/roles.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtModule } from '@nestjs/jwt';
     ReviewModule,
     FilesModule,
     RolesModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
