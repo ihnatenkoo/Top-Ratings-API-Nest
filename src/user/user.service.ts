@@ -47,4 +47,23 @@ export class UserService {
       isBanned: updatedUser.isBanned,
     };
   }
+
+  async unBanUser(email: string): Promise<IBanUserResponse> {
+    const user = (await this.findUser(email)) as FindUserType;
+
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND);
+    }
+
+    user.isBanned = false;
+    user.banReasons = undefined;
+
+    const updatedUser = await user.save();
+
+    return {
+      email: updatedUser.email,
+      banReasons: updatedUser.banReasons,
+      isBanned: updatedUser.isBanned,
+    };
+  }
 }
