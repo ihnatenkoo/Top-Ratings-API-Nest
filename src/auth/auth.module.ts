@@ -8,6 +8,7 @@ import { RoleModel, RoleSchema } from 'src/roles/role.model';
 import { UserModel, UserSchema } from './auth.model';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthController } from './auth.controller';
     ]),
     PassportModule,
     RolesModule,
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtService],

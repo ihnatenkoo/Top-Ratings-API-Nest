@@ -8,25 +8,21 @@ import { UserModel } from './auth.model';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RolesService } from 'src/roles/roles.service';
-import { RoleModel } from 'src/roles/role.model';
 import { Roles } from 'src/constants/roles';
-import {
-  NOT_FOUND,
-  USER_ALREADY_REGISTERED,
-  WRONG_CREDENTIALS,
-} from 'src/constants';
+import { USER_ALREADY_REGISTERED, WRONG_CREDENTIALS } from 'src/constants';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(UserModel.name) private readonly userModel: Model<UserModel>,
-    @InjectModel(RoleModel.name) private readonly roleModel: Model<RoleModel>,
     private readonly jwtService: JwtService,
     private readonly rolesService: RolesService,
+    private readonly userService: UserService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<IAccessToken> {
-    const user = await this.findUser(registerDto.email);
+    const user = await this.userService.findUser(registerDto.email);
 
     const role = await this.rolesService.findRole(Roles.USER);
 
@@ -42,7 +38,7 @@ export class AuthService {
       roles: [role?._id],
     });
 
-    const createdUser = await this.findUser(newUser.email);
+    const createdUser = await this.userService.findUser(newUser.email);
 
     const access_token = await this.generateAccessToken({
       _id: createdUser._id,
@@ -54,10 +50,10 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<IAccessToken> {
-    const user = await this.findUser(loginDto.email);
+    const user = await this.userService.findUser(loginDto.email);
 
     if (!user) {
-      throw new HttpException(NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);
     }
 
     const isPasswordCorrect = await this.validateUser(
@@ -76,13 +72,6 @@ export class AuthService {
     });
 
     return { access_token };
-  }
-
-  async findUser(email: string): Promise<UserModel> {
-    return this.userModel
-      .findOne({ email })
-      .populate('roles', '', this.roleModel)
-      .lean();
   }
 
   async validateUser(password: string, passwordHash: string): Promise<boolean> {
