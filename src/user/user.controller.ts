@@ -11,8 +11,10 @@ import { RolesDecorator } from 'src/decorators/role.decorator';
 import { Roles } from 'src/constants/roles';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserModel } from 'src/auth/auth.model';
-import { FindUserDto } from './dto/find-user.dto';
 import { UserService } from './user.service';
+import { FindUserDto } from './dto/find-user.dto';
+import { BanUserDto } from './dto/ban-user.dto';
+import { IBanUserResponse } from './types';
 
 @Controller('user')
 export class UserController {
@@ -25,5 +27,16 @@ export class UserController {
   @HttpCode(200)
   async findUser(@Body() dto: FindUserDto): Promise<UserModel> {
     return await this.userService.findUser(dto.email);
+  }
+
+  @Post('/ban')
+  @UsePipes(new ValidationPipe())
+  @RolesDecorator(Roles.ADMIN)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
+  async banUser(
+    @Body() { email, banReasons }: BanUserDto,
+  ): Promise<IBanUserResponse> {
+    return this.userService.banUser(email, banReasons);
   }
 }

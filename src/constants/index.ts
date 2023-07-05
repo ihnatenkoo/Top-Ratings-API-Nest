@@ -1,4 +1,5 @@
 export const NOT_FOUND = 'Not found';
+export const USER_NOT_FOUND = 'User not found';
 export const UNAUTHORIZED = 'Unauthorized';
 export const PRODUCT_NOT_FOUND = 'Product not found';
 export const REVIEW_NOT_FOUND = 'Review not found';
@@ -7,3 +8,4 @@ export const WRONG_CREDENTIALS = 'Wrong credentials';
 export const ACCESS_DENIED = 'Access denied';
 export const BAD_DELETE_REVIEW_REQUEST = 'Product does not contain this review';
 export const ID_IS_INVALID = 'ID is invalid';
+export const CAN_NOT_BAN_ADMIN = 'You can not ban an administrator';

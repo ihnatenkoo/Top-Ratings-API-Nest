@@ -15,8 +15,8 @@ export class UserModel {
   @Prop()
   name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'roles' })
-  roles: RoleModel;
+  @Prop({ ref: 'roles' })
+  roles: RoleModel[];
 
   @Prop({ default: false })
   isBanned: boolean;
