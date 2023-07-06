@@ -68,4 +68,13 @@ export class UserController {
   async addRole(@Body() { email, role }: AddRoleDto): Promise<void> {
     return await this.userService.addRole(email, role);
   }
+
+  @Post('/deleteRole')
+  @UsePipes(new ValidationPipe())
+  @RolesDecorator(Roles.ADMIN)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
+  async deleteRole(@Body() { email, role }: AddRoleDto): Promise<void> {
+    return await this.userService.deleteRole(email, role);
+  }
 }

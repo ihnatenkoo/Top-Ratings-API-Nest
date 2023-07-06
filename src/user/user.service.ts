@@ -99,4 +99,18 @@ export class UserService {
 
     await user.save();
   }
+
+  async deleteRole(email: string, role: string): Promise<void> {
+    const user = (await this.findUser(
+      email,
+    )) as any as FindUserWithPopulatedRoles;
+
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND);
+    }
+
+    user.roles = user.roles.filter((roleObj) => roleObj.role !== role);
+
+    await user.save();
+  }
 }
