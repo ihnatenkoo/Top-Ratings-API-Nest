@@ -24,7 +24,7 @@ export class UserController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  @RolesDecorator(Roles.ADMIN)
+  @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
   async findUser(@Body() dto: FindUserDto): Promise<UserModel> {
@@ -39,7 +39,7 @@ export class UserController {
 
   @Post('/ban')
   @UsePipes(new ValidationPipe())
-  @RolesDecorator(Roles.ADMIN)
+  @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
   async banUser(
@@ -50,7 +50,7 @@ export class UserController {
 
   @Post('/unban')
   @UsePipes(new ValidationPipe())
-  @RolesDecorator(Roles.ADMIN)
+  @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
   async unBanUser(
