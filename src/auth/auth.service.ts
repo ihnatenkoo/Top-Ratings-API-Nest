@@ -22,23 +22,23 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<IAccessToken> {
-    const user = await this.userService.findUser(registerDto.email);
-
-    const role = await this.rolesService.findRole(Roles.USER);
+    const user = await this.userService.findUserForAuth(registerDto.email);
 
     if (user) {
       throw new HttpException(USER_ALREADY_REGISTERED, HttpStatus.BAD_REQUEST);
     }
+
+    const userRole = await this.rolesService.findRole(Roles.USER);
 
     const passwordHash = await hash(registerDto.password, 10);
 
     const newUser = await this.userModel.create({
       ...registerDto,
       passwordHash,
-      roles: [role?._id],
+      roles: [userRole?._id],
     });
 
-    const createdUser = await this.userService.findUser(newUser.email);
+    const createdUser = await this.userService.findUserForAuth(newUser.email);
 
     const access_token = await this.generateAccessToken({
       _id: createdUser._id,
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<IAccessToken> {
-    const user = await this.userService.findUser(loginDto.email);
+    const user = await this.userService.findUserForAuth(loginDto.email);
 
     if (!user) {
       throw new HttpException(WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);

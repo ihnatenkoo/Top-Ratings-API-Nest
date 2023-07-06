@@ -31,19 +31,35 @@ export class UserService {
   ) {}
 
   async findUser(email: string): Promise<FindUserDoc> {
-    return await this.userModel
-      .findOne({ email })
-      .populate('roles', '', this.roleModel);
-  }
-
-  async banUser(email: string, banReasons: string): Promise<IBanUserResponse> {
-    const user = (await this.findUser(
-      email,
-    )) as any as FindUserWithPopulatedRoles;
+    const user = await this.userModel.findOne({ email });
 
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
+
+    return user;
+  }
+
+  async findUserWithRoles(email: string): Promise<FindUserWithPopulatedRoles> {
+    const user = (await this.userModel
+      .findOne({ email })
+      .populate('roles', '', this.roleModel)) as FindUserWithPopulatedRoles;
+
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND);
+    }
+
+    return user;
+  }
+
+  async findUserForAuth(email: string): Promise<FindUserDoc> {
+    return await this.userModel.findOne({
+      email,
+    });
+  }
+
+  async banUser(email: string, banReasons: string): Promise<IBanUserResponse> {
+    const user = await this.findUserWithRoles(email);
 
     if (user.roles?.some(({ role }) => role === Roles.ADMIN)) {
       throw new HttpException(CAN_NOT_BAN_ADMIN, HttpStatus.BAD_REQUEST);
@@ -64,10 +80,6 @@ export class UserService {
   async unBanUser(email: string): Promise<IBanUserResponse> {
     const user = await this.findUser(email);
 
-    if (!user) {
-      throw new NotFoundException(USER_NOT_FOUND);
-    }
-
     user.isBanned = false;
     user.banReasons = undefined;
 
@@ -81,15 +93,8 @@ export class UserService {
   }
 
   async addRole(email: string, role: string): Promise<void> {
-    const user = (await this.findUser(
-      email,
-    )) as any as FindUserWithPopulatedRoles;
-
+    const user = await this.findUserWithRoles(email);
     const findRole = await this.rolesService.findRole(role);
-
-    if (!user) {
-      throw new NotFoundException(USER_NOT_FOUND);
-    }
 
     if (user.roles.some((roleObj) => roleObj.role === findRole.role)) {
       throw new BadRequestException(USER_HAS_THIS_ROLE);
@@ -101,13 +106,7 @@ export class UserService {
   }
 
   async deleteRole(email: string, role: string): Promise<void> {
-    const user = (await this.findUser(
-      email,
-    )) as any as FindUserWithPopulatedRoles;
-
-    if (!user) {
-      throw new NotFoundException(USER_NOT_FOUND);
-    }
+    const user = await this.findUserWithRoles(email);
 
     user.roles = user.roles.filter((roleObj) => roleObj.role !== role);
 
