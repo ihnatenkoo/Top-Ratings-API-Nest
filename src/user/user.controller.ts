@@ -17,6 +17,7 @@ import { FindUserDto } from './dto/find-user.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { IBanUserResponse } from './types';
 import { USER_NOT_FOUND } from 'src/constants';
+import { AddRoleDto } from './dto/add-role.dto';
 
 @Controller('user')
 export class UserController {
@@ -57,5 +58,14 @@ export class UserController {
     @Body() { email }: Pick<BanUserDto, 'email'>,
   ): Promise<IBanUserResponse> {
     return await this.userService.unBanUser(email);
+  }
+
+  @Post('/addRole')
+  @UsePipes(new ValidationPipe())
+  @RolesDecorator(Roles.ADMIN)
+  @UseGuards(RolesGuard)
+  @HttpCode(200)
+  async addRole(@Body() { email, role }: AddRoleDto): Promise<void> {
+    return await this.userService.addRole(email, role);
   }
 }

@@ -9,3 +9,4 @@ export const ACCESS_DENIED = 'Access denied';
 export const BAD_DELETE_REVIEW_REQUEST = 'Product does not contain this review';
 export const ID_IS_INVALID = 'ID is invalid';
 export const CAN_NOT_BAN_ADMIN = 'You can not ban an administrator';
+export const USER_HAS_THIS_ROLE = 'The user already has this role';

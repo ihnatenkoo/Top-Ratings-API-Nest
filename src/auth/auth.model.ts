@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { RoleModel } from '../roles/role.model';
 
 @Schema({ versionKey: false, collection: 'users' })
 export class UserModel {
@@ -16,7 +15,7 @@ export class UserModel {
   name: string;
 
   @Prop({ ref: 'roles' })
-  roles: RoleModel[];
+  roles: Types.ObjectId[];
 
   @Prop({ default: false })
   isBanned: boolean;
