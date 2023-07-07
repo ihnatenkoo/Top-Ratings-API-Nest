@@ -10,8 +10,6 @@ import {
   Patch,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { NOT_FOUND } from 'src/constants';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -27,7 +25,6 @@ export class ProductController {
 
   @Post('create')
   @UseGuards(JwtAuthGuard)
-  @UsePipes(new ValidationPipe())
   async create(
     @Body() createProductDto: CreateProductDto,
   ): Promise<ProductModel> {
@@ -74,7 +71,6 @@ export class ProductController {
   }
 
   @Post('find')
-  @UsePipes(new ValidationPipe())
   @HttpCode(200)
   async findWithReviews(
     @Body() findProductDto: FindProductDto,

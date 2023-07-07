@@ -6,8 +6,6 @@ import {
   Param,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RolesService } from './roles.service';
@@ -20,7 +18,6 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
-  @UsePipes(new ValidationPipe())
   @Post()
   @RolesDecorator(Roles.ADMIN)
   @UseGuards(RolesGuard)

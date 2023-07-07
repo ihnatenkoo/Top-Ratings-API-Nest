@@ -8,8 +8,6 @@ import {
   Patch,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CreatePageDto } from './dto/create-page.dto';
 import { FindTopPageDto } from './dto/find-top-page.dto';
@@ -24,7 +22,6 @@ export class TopPageController {
 
   @Post('create')
   @UseGuards(JwtAuthGuard)
-  @UsePipes(new ValidationPipe())
   async create(@Body() createPageDto: CreatePageDto): Promise<TopPageModel> {
     return await this.topPageService.create(createPageDto);
   }
@@ -43,7 +40,6 @@ export class TopPageController {
   }
 
   @Patch(':id')
-  @UsePipes(new ValidationPipe())
   @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', IdValidationPipe) pageId: string,
@@ -53,7 +49,6 @@ export class TopPageController {
   }
 
   @Post()
-  @UsePipes(new ValidationPipe())
   @HttpCode(200)
   async findByCategory(
     @Body() findTopPageDto: FindTopPageDto,

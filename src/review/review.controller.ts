@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -23,7 +21,6 @@ export class ReviewController {
 
   @Post('create')
   @UseGuards(JwtAuthGuard)
-  @UsePipes(new ValidationPipe())
   async create(
     @User('id', IdValidationPipe) userId: string,
     @Query('product', IdValidationPipe) productId: string,

@@ -5,8 +5,6 @@ import {
   NotFoundException,
   Post,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { RolesDecorator } from 'src/decorators/role.decorator';
 import { Roles } from 'src/constants/roles';
@@ -24,7 +22,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe())
   @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
@@ -39,7 +36,6 @@ export class UserController {
   }
 
   @Post('/ban')
-  @UsePipes(new ValidationPipe())
   @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
@@ -50,7 +46,6 @@ export class UserController {
   }
 
   @Post('/unban')
-  @UsePipes(new ValidationPipe())
   @RolesDecorator(Roles.ADMIN, Roles.MODERATOR)
   @UseGuards(RolesGuard)
   @HttpCode(200)
@@ -61,7 +56,6 @@ export class UserController {
   }
 
   @Post('/addRole')
-  @UsePipes(new ValidationPipe())
   @RolesDecorator(Roles.ADMIN)
   @UseGuards(RolesGuard)
   @HttpCode(200)
@@ -70,7 +64,6 @@ export class UserController {
   }
 
   @Post('/deleteRole')
-  @UsePipes(new ValidationPipe())
   @RolesDecorator(Roles.ADMIN)
   @UseGuards(RolesGuard)
   @HttpCode(200)
