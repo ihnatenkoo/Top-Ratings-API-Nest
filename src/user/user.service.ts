@@ -52,10 +52,10 @@ export class UserService {
     return user;
   }
 
-  async findUserForAuth(email: string): Promise<FindUserDoc> {
-    return await this.userModel.findOne({
-      email,
-    });
+  async findUserForAuth(email: string): Promise<FindUserWithPopulatedRoles> {
+    return this.userModel
+      .findOne({ email })
+      .populate('roles', '', this.roleModel);
   }
 
   async banUser(email: string, banReasons: string): Promise<IBanUserResponse> {
